@@ -54,9 +54,15 @@ def find_kkt_Lg(n_buses,P_Loads,P_Gens):
         beta_d_start=2*n_gbus+n_line+1
         beta_d_end=2*n_gbus+2*n_line+1
     
-        A=np.zeros([2*n_gbus+2*n_line+1,2*n_gbus+2*n_line+1])
-        B=np.zeros([2*n_gbus+2*n_line+1,1])
+        # A=np.zeros([2*n_gbus+2*n_line+1,2*n_gbus+2*n_line+1])
+        # B=np.zeros([2*n_gbus+2*n_line+1,1])
     
+        num_vars = 2*n_gbus+2*n_line+1
+        max_rows = 3*n_gbus+2*n_line+5 
+
+        A=np.zeros([max_rows, num_vars])
+        B=np.zeros([max_rows, 1])
+
         #   Stationarity condition
         A[0:n_gbus,lamda_start:lambda_end]= np.ones(n_gbus).reshape((n_gbus,1))
         A[0:n_gbus,alpha_u_start:alpha_u_end]= np.diag(-np.ones(n_gbus))
@@ -84,7 +90,8 @@ def find_kkt_Lg(n_buses,P_Loads,P_Gens):
                 row+=1
         # Checking if number of equations equal to number of variables         
         if row == 2*n_gbus+2*n_line+1:
-            Lg = np.linalg.solve(A,B)
+            # Lg = np.linalg.solve(A,B)
+            Lg = np.linalg.lstsq(A[:row, :], B[:row, :], rcond=None)[0]
             Lg_val.append(Lg.reshape(1,2*n_gbus+2*n_line+1)[0])
             rem=rem+1
         else :

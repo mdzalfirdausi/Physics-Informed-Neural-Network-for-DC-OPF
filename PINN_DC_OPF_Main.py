@@ -61,7 +61,7 @@ def PINN_DC_OPF():
     # print(results)
     total_end_time = time.time()
     print(f'Total training time: {total_end_time - total_start_time:.1f} seconds')
-
+ 
 
 if __name__ == "__main__":
     PINN_DC_OPF()

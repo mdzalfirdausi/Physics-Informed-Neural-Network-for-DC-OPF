@@ -1,6 +1,6 @@
 % We create the datasets for neural network training
 % Input/Feature: System loading
-% Output: Optimal generation with MATPOWER DC-OPF 
+% Output: Optimal generation with MATPOWER DC-OPF
 clear all;
 close all;
 

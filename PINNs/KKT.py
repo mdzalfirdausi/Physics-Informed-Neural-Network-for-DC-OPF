@@ -81,6 +81,23 @@ def find_kkt_Lg(n_buses,P_Loads,P_Gens):
                 A[row,alpha_d_start+i] = P_Gen[0][i] - Pg_min[0][i]
                 row+=1
         #  Complementary slackness condition for the line flows not at their limit            
+        # for i in range(0,n_line):
+    #         if Pl_max[i] - np.matmul((np.matmul(P_Gen,Map_g)-np.matmul(P_Load,Map_L)),PTDF)[0][i] > 0.1 or Pl_max[i] - np.matmul((np.matmul(P_Gen,Map_g)-np.matmul(P_Load,Map_L)),PTDF)[0][i]< -0.1:
+    #             A[row,beta_u_start+i] = Pl_max[i] - np.matmul((np.matmul(P_Gen,Map_g)-np.matmul(P_Load,Map_L)),PTDF)[0][i]
+    #             row+=1
+    #         if np.matmul((np.matmul(P_Gen,Map_g)-np.matmul(P_Load,Map_L)),PTDF)[0][i] + Pl_max[i] > 0.1 or np.matmul((np.matmul(P_Gen,Map_g)-np.matmul(P_Load,Map_L)),PTDF)[0][i] + Pl_max[i] < -0.1 :
+    #             A[row,beta_d_start+i] = np.matmul((np.matmul(P_Gen,Map_g)-np.matmul(P_Load,Map_L)),PTDF)[0][i] + Pl_max[i] 
+    #             row+=1
+    #     # Checking if number of equations equal to number of variables         
+    #     if row == 2*n_gbus+2*n_line+1:
+    #         # Lg = np.linalg.solve(A,B)
+    #         Lg = np.linalg.lstsq(A[:row, :], B[:row, :], rcond=None)[0]
+    #         Lg_val.append(Lg.reshape(1,2*n_gbus+2*n_line+1)[0])
+    #         rem=rem+1
+    #     else :
+    #         print(l)
+    # return Lg_val      
+        #  Complementary slackness condition for the line flows not at their limit            
         for i in range(0,n_line):
             if Pl_max[i] - np.matmul((np.matmul(P_Gen,Map_g)-np.matmul(P_Load,Map_L)),PTDF)[0][i] > 0.1 or Pl_max[i] - np.matmul((np.matmul(P_Gen,Map_g)-np.matmul(P_Load,Map_L)),PTDF)[0][i]< -0.1:
                 A[row,beta_u_start+i] = Pl_max[i] - np.matmul((np.matmul(P_Gen,Map_g)-np.matmul(P_Load,Map_L)),PTDF)[0][i]
@@ -88,12 +105,10 @@ def find_kkt_Lg(n_buses,P_Loads,P_Gens):
             if np.matmul((np.matmul(P_Gen,Map_g)-np.matmul(P_Load,Map_L)),PTDF)[0][i] + Pl_max[i] > 0.1 or np.matmul((np.matmul(P_Gen,Map_g)-np.matmul(P_Load,Map_L)),PTDF)[0][i] + Pl_max[i] < -0.1 :
                 A[row,beta_d_start+i] = np.matmul((np.matmul(P_Gen,Map_g)-np.matmul(P_Load,Map_L)),PTDF)[0][i] + Pl_max[i] 
                 row+=1
-        # Checking if number of equations equal to number of variables         
-        if row == 2*n_gbus+2*n_line+1:
-            # Lg = np.linalg.solve(A,B)
-            Lg = np.linalg.lstsq(A[:row, :], B[:row, :], rcond=None)[0]
-            Lg_val.append(Lg.reshape(1,2*n_gbus+2*n_line+1)[0])
-            rem=rem+1
-        else :
-            print(l)
-    return Lg_val      
+        
+        # Calculate dual variables using Least Squares for EVERY sample
+        Lg = np.linalg.lstsq(A[:row, :], B[:row, :], rcond=None)[0]
+        Lg_val.append(Lg.reshape(1,2*n_gbus+2*n_line+1)[0])
+        rem=rem+1
+
+    return Lg_val

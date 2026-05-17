@@ -55,7 +55,16 @@ for c=1:nr_cases %1:nr_cases %loop over cases
 end
 toc();
 
+% dataset_folder = strcat(pwd,'/Data_Sets/case',num2str(39),'_DCOPF/');
+% csvwrite(strcat(dataset_folder,'New_input.csv'),Pl_value);
+
 dataset_folder = strcat(pwd,'/Data_Sets/case',num2str(39),'_DCOPF/');
+
+% Check if the directory exists, if not, create it
+if ~exist(dataset_folder, 'dir')
+    mkdir(dataset_folder);
+end
+
 csvwrite(strcat(dataset_folder,'New_input.csv'),Pl_value);
 
 save('Workspace_S5_Worst_Case_Constraint_Violations_MILP');
